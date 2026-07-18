@@ -190,6 +190,41 @@
   .term .c { color: #5d7d8c; }
   .term div { white-space: pre; }
 
+  /* workflows */
+  .flows {
+    margin-top: 20px; background: var(--bg-raise); border: 1px solid var(--line);
+    border-radius: 16px; box-shadow: var(--shadow); overflow: hidden;
+  }
+  .flows-head {
+    padding: 16px 20px 13px; font-weight: 700; font-size: 15px;
+    border-bottom: 1px solid var(--line);
+  }
+  .flows-head .count { color: var(--accent-ink); }
+  .flow {
+    display: grid; grid-template-columns: 168px 1fr; gap: 14px;
+    padding: 12px 20px; font-size: 14px;
+  }
+  .flow + .flow { border-top: 1px solid var(--line); }
+  .flow .cmd {
+    font-family: "SF Mono", "Cascadia Code", Consolas, Menlo, monospace;
+    font-size: 13px; font-weight: 600; color: var(--accent-ink);
+  }
+  .flow .desc { color: var(--ink-soft); }
+  @media (max-width: 560px) { .flow { grid-template-columns: 1fr; gap: 3px; } }
+
+  /* theme toggle */
+  .theme-toggle {
+    position: fixed; top: 18px; right: 18px; z-index: 10;
+    width: 42px; height: 42px; border-radius: 50%;
+    border: 1px solid var(--line); background: var(--bg-raise);
+    color: var(--ink-soft); cursor: pointer; box-shadow: var(--shadow);
+    font-size: 17px; line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+    transition: color .15s ease, border-color .15s ease;
+  }
+  .theme-toggle:hover { color: var(--accent-ink); border-color: var(--accent); }
+  .theme-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
   /* deloitte */
   .split { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   @media (max-width: 640px) { .split { grid-template-columns: 1fr; } }
@@ -229,6 +264,15 @@
 </style>
 </head>
 <body>
+<script>
+(function () {
+  try {
+    var s = localStorage.getItem("cv-theme");
+    if (s === "dark" || s === "light") document.documentElement.setAttribute("data-theme", s);
+  } catch (e) {}
+})();
+</script>
+<button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle light or dark theme">☾</button>
 
 <header class="hero wrap">
   <div class="status"><span class="dot"></span>OPEN TO AI ROLES · AUCKLAND, NZ</div>
@@ -236,9 +280,9 @@
     <div class="hero-text">
       <h1>Ollie <span class="accent">Cashmore</span></h1>
       <p class="thesis">
-        <b>Auditor at Deloitte. Co-founder of WeTalk.ai.</b> I took an AI voice agent from
-        concept to answering real patient calls in production, in under eight months,
-        while working full time in audit.
+        <b>Auditor at Deloitte. Co-founder of WeTalk.ai.</b> We took an AI voice agent from
+        concept to answering real patient calls in under eight months. I built the AI
+        operating system that runs the company behind it, while working full time in audit.
       </p>
       <div class="chips">
         <a class="chip" href="mailto:ollie@wetalkai.co.nz"><span class="k">email</span>ollie@wetalkai.co.nz</a>
@@ -268,8 +312,9 @@
             <p>Started with a simple observation: clinics miss calls, and missed calls are missed patients.
               We designed "Jenny", an AI receptionist that answers inbound patient calls 24/7, books
               appointments in real time through practice management APIs (Gensolve), and confirms by SMS.</p>
-            <p>Stack: Vapi, ElevenLabs, Claude and Twilio. My side of the company: strategy, operations,
-              product roadmap and agent design. Hamish runs sales and client relationships.</p>
+            <p>Stack: Vapi, ElevenLabs, Claude and Twilio. My side of the company: strategy, operations
+              and the AI systems that run it. Hamish runs sales and client relationships, and a contract
+              engineer leads Jenny's core build.</p>
           </div>
         </details>
       </li>
@@ -310,49 +355,80 @@
 
 <section>
   <div class="wrap">
-    <p class="eyebrow rv">02 · What I actually do</p>
-    <h2 class="rv">Build it, run it, price it</h2>
-    <p class="lede rv">Co-founding at launch stage means owning the whole loop, from agent behaviour to unit economics.</p>
+    <p class="eyebrow rv">02 · My core build</p>
+    <h2 class="rv">The AI operating system behind WeTalk</h2>
+    <p class="lede rv">I designed, assembled and solo-operate the system that runs WeTalk's back office: a
+      git-version-controlled AI operations layer that holds the company's knowledge, watches its systems
+      through live integrations, executes routine operations, and rewrites its own understanding of the
+      business every night.</p>
     <div class="cards">
       <div class="card rv">
-        <h3><span class="tag">Build</span>Agent design &amp; guardrails</h3>
+        <h3><span class="tag">Connected</span>Live integrations</h3>
         <ul>
-          <li>Designed Jenny's behaviour, escalation rules and per-clinic configuration</li>
-          <li>Human handoff for medical questions and private information, responsible AI from day one</li>
-          <li>Co-managed a contract software engineer on core delivery</li>
+          <li>Accounting, email, calendar, documents and task management wired in through live MCP connections: Xero, Gmail, Google Calendar, Google Drive, ClickUp, GitHub</li>
+          <li>Financial questions answered from live accounting data, never estimates</li>
+          <li>Website deploys flow from GitHub to Vercel</li>
         </ul>
       </div>
       <div class="card rv">
-        <h3><span class="tag">Operate</span>AI operations, built with Claude Code</h3>
+        <h3><span class="tag">Autonomous</span>Nightly self-update</h3>
         <ul>
-          <li>MCP and API integrations into Xero, Gmail and Google Calendar</li>
-          <li>Nightly automated business intelligence, version-controlled in git</li>
-          <li>Automated contractor invoicing pipeline into Xero</li>
+          <li>Every night the system reads email, accounts, calendar and tasks, then rewrites the company's current-state snapshot and commits it to git</li>
+          <li>Consolidated morning briefing: calendar, inbox, financial position, open actions</li>
+          <li>Contractor invoices drafted into Xero automatically on arrival</li>
         </ul>
       </div>
       <div class="card rv">
-        <h3><span class="tag">Commercial</span>Unit economics &amp; clients</h3>
+        <h3><span class="tag">Governed</span>Safe by design</h3>
         <ul>
-          <li>Per-minute AI cost analysis from usage actuals, burn and break-even modelling, margin-floor pricing</li>
-          <li>Scoped requirements with clinic owners and reception staff</li>
-          <li>Ran demos, co-managed pilots and commercial negotiations</li>
+          <li>Emails are draft-only, never auto-sent</li>
+          <li>No commitments on pricing or timelines without founder sign-off</li>
+          <li>Every change committed to git with a descriptive message: a full audit trail of the business brain</li>
         </ul>
       </div>
     </div>
-    <div class="term rv" role="img" aria-label="Terminal showing the WeTalk operations workflow">
+    <div class="flows rv">
+      <div class="flows-head"><span class="count">11 custom workflows,</span> built from scratch. A selection:</div>
+      <div class="flow"><span class="cmd">/council</span><span class="desc">Five independent AI advisor personas debate a decision in parallel; a chairman synthesises the recommendation</span></div>
+      <div class="flow"><span class="cmd">/new-client</span><span class="desc">Interview to signed paperwork: generates the service agreement and statement of work, branded and filed</span></div>
+      <div class="flow"><span class="cmd">/check-new-client</span><span class="desc">Four specialist sub-agents QA every generated contract against templates, internal docs and NZ law</span></div>
+      <div class="flow"><span class="cmd">/morning-briefing</span><span class="desc">The day's calendar, inbox, financial position and tasks in one summary</span></div>
+      <div class="flow"><span class="cmd">/draft-emails</span><span class="desc">Reads the unread inbox and drafts on-voice replies, ready for human review and send</span></div>
+      <div class="flow"><span class="cmd">/loop-engineer</span><span class="desc">Interviews me about any recurring task, then designs and hands back a ready-to-run autonomous loop</span></div>
+    </div>
+    <div class="term rv" role="img" aria-label="Terminal showing the nightly operations run">
       <div class="bar"><span></span><span></span><span></span></div>
-      <div><span class="p">wetalk-ops $</span> claude <span class="c"># how the company actually runs</span></div>
-      <div><span class="ok">✓</span> nightly business intelligence compiled → committed to git</div>
-      <div><span class="ok">✓</span> contractor invoices generated → pushed to Xero</div>
-      <div><span class="ok">✓</span> calendar + inbox synced via MCP</div>
-      <div><span class="c"># this page was also built with Claude Code</span></div>
+      <div><span class="p">wetalk-ops $</span> nightly update</div>
+      <div><span class="ok">✓</span> inbox, accounts, calendar and tasks read</div>
+      <div><span class="ok">✓</span> current-state snapshot rewritten → committed to git</div>
+      <div><span class="ok">✓</span> contractor invoices drafted → Xero</div>
+      <div><span class="c"># the business wakes up to an updated brain, daily</span></div>
     </div>
   </div>
 </section>
 
 <section>
   <div class="wrap">
-    <p class="eyebrow rv">03 · The day job</p>
+    <p class="eyebrow rv">03 · The commercial side</p>
+    <h2 class="rv">Numbers and clients</h2>
+    <div class="split" style="margin-top:24px">
+      <div class="fact rv">
+        <p class="big">Unit economics and pricing</p>
+        <p>Per-minute AI cost analysis from usage actuals, monthly burn and break-even modelling, and a
+          margin-floor pricing structure.</p>
+      </div>
+      <div class="fact rv">
+        <p class="big">Client-facing delivery</p>
+        <p>Scoped requirements with clinic owners and reception staff, ran product demos, and co-managed
+          pilot relationships and commercial negotiations.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow rv">04 · The day job</p>
     <h2 class="rv">Deloitte, Audit</h2>
     <p class="lede rv">Junior Associate in Deloitte Auckland's audit practice since January 2026, where the
       AI and audit worlds are starting to meet.</p>
@@ -373,7 +449,7 @@
 
 <section>
   <div class="wrap">
-    <p class="eyebrow rv">04 · Foundations</p>
+    <p class="eyebrow rv">05 · Foundations</p>
     <h2 class="rv">Education &amp; background</h2>
     <div class="edu-row rv" style="margin-top:18px">
       <span><b>BCom, Finance &amp; Economics</b> (double major) · University of Otago, 2023–2025</span>
@@ -391,7 +467,7 @@
 
 <footer>
   <div class="wrap">
-    <p class="foot-line rv"><b>$</b> built by Ollie with Claude Code · the same way WeTalk runs</p>
+    <p class="foot-line rv">Ollie Cashmore · Auckland, New Zealand</p>
     <div class="foot-cta rv">
       <a class="chip" href="mailto:ollie@wetalkai.co.nz">Get in touch</a>
       <a class="chip" href="https://www.linkedin.com/in/ollie-cashmore-2b2829339/" target="_blank" rel="noopener">LinkedIn</a>
@@ -402,6 +478,24 @@
 <script>
 (function () {
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* theme toggle */
+  var root = document.documentElement;
+  var btn = document.getElementById("themeToggle");
+  function effectiveDark() {
+    var t = root.getAttribute("data-theme");
+    if (t === "dark") return true;
+    if (t === "light") return false;
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+  function paintBtn() { btn.textContent = effectiveDark() ? "☀" : "☾"; }
+  btn.addEventListener("click", function () {
+    var next = effectiveDark() ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    try { localStorage.setItem("cv-theme", next); } catch (e) {}
+    paintBtn();
+  });
+  paintBtn();
 
   /* scroll reveal */
   var els = document.querySelectorAll(".rv");
