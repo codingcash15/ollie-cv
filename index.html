@@ -212,6 +212,53 @@
   .flow .desc { color: var(--ink-soft); }
   @media (max-width: 560px) { .flow { grid-template-columns: 1fr; gap: 3px; } }
 
+  /* photo deck */
+  .deck-wrap { margin-top: 26px; }
+  .deck {
+    position: relative; width: 100%; height: 500px;
+    touch-action: pan-y; perspective: 1200px;
+  }
+  .card-photo {
+    position: absolute; width: 210px;
+    background: #fdfdfb; padding: 10px 10px 0; border-radius: 3px;
+    box-shadow: 0 6px 18px -6px rgba(18,36,48,.35), 0 2px 6px rgba(18,36,48,.16);
+    cursor: grab; user-select: none;
+    transition: box-shadow .2s ease;
+    will-change: transform;
+  }
+  :root[data-theme="dark"] .card-photo,
+  .card-photo { }
+  @media (prefers-color-scheme: dark) { .card-photo { background: #eef1ee; } }
+  :root[data-theme="dark"] .card-photo { background: #eef1ee; }
+  :root[data-theme="light"] .card-photo { background: #fdfdfb; }
+  .card-photo img {
+    display: block; width: 100%; border-radius: 1px; pointer-events: none;
+    aspect-ratio: 3 / 4; object-fit: cover;
+  }
+  .card-photo.wide { width: 280px; }
+  .card-photo.wide img { aspect-ratio: 4 / 3; }
+  .card-photo .cap {
+    font-family: "SF Mono", "Cascadia Code", Consolas, Menlo, monospace;
+    font-size: 11px; letter-spacing: .02em; color: #45606e;
+    text-align: center; padding: 9px 4px 11px; pointer-events: none;
+  }
+  .card-photo.dragging { cursor: grabbing; box-shadow: 0 22px 44px -12px rgba(18,36,48,.5), 0 6px 14px rgba(18,36,48,.22); }
+  .deck-hint {
+    font-family: "SF Mono", "Cascadia Code", Consolas, Menlo, monospace;
+    font-size: 12px; color: var(--muted); margin-top: 8px;
+  }
+  /* narrow-screen fallback: clean stack, no absolute positioning */
+  @media (max-width: 620px) {
+    .deck { height: auto; display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .card-photo, .card-photo.wide {
+      position: static !important; width: 100% !important;
+      transform: none !important; cursor: default;
+    }
+    .card-photo.wide { grid-column: 1 / -1; }
+    .card-photo.wide img { aspect-ratio: 16 / 10; }
+    .deck-hint { display: none; }
+  }
+
   /* theme toggle */
   .theme-toggle {
     position: fixed; top: 18px; right: 18px; z-index: 10;
@@ -465,6 +512,36 @@
   </div>
 </section>
 
+<section>
+  <div class="wrap">
+    <p class="eyebrow rv">06 · Away from the desk</p>
+    <h2 class="rv">The rest of it</h2>
+    <p class="lede rv">Auckland-based, Otago-raised. Outside work you'll find me on the water, in the gym,
+      or with the people who matter. Grab a photo and throw it around.</p>
+    <div class="deck-wrap rv">
+      <div class="deck" id="deck">
+        <div class="card-photo wide" data-x="4" data-y="6" data-r="-5">
+          <img src="deck-family.jpg" alt="Family on the boat, Wānaka">
+          <div class="cap">family · wānaka</div>
+        </div>
+        <div class="card-photo" data-x="46" data-y="2" data-r="4">
+          <img src="deck-water.jpg" alt="Wakeboarding on Lake Wānaka">
+          <div class="cap">on the water · wānaka</div>
+        </div>
+        <div class="card-photo" data-x="26" data-y="40" data-r="-3">
+          <img src="deck-debut.jpg" alt="A mate's Otago debut at Forsyth Barr Stadium">
+          <div class="cap">a mate's otago debut · forsyth barr</div>
+        </div>
+        <div class="card-photo" data-x="62" data-y="34" data-r="6">
+          <img src="deck-grad.jpg" alt="Otago graduation with family">
+          <div class="cap">otago graduation</div>
+        </div>
+      </div>
+      <p class="deck-hint">↖ drag the photos around</p>
+    </div>
+  </div>
+</section>
+
 <footer>
   <div class="wrap">
     <p class="foot-line rv">Ollie Cashmore · Auckland, New Zealand</p>
@@ -558,6 +635,99 @@
   }
   draw();
   if (reduced) { t = 30; draw(); }
+})();
+</script>
+
+<script>
+/* draggable photo deck — isolated so nothing upstream can block it */
+(function () {
+  function init() {
+    var deck = document.getElementById("deck");
+    if (!deck) return;
+    var tiltable = window.matchMedia("(hover: hover)").matches;
+    var cards = Array.prototype.slice.call(deck.querySelectorAll(".card-photo"));
+    var zTop = 10;
+
+    function enabled() { return window.innerWidth >= 621; }
+    function paint(card) {
+      card.style.transform =
+        "translate(" + card.__x + "px," + card.__y + "px) rotate(" + card.__r + "deg) " +
+        "rotateX(" + card.__ty + "deg) rotateY(" + card.__tx + "deg)";
+    }
+    function place(card) {
+      var dw = deck.clientWidth, dh = deck.clientHeight;
+      var cw = card.offsetWidth, ch = card.offsetHeight;
+      var x = parseFloat(card.dataset.x) / 100 * (dw - cw);
+      var y = parseFloat(card.dataset.y) / 100 * Math.max(0, dh - ch);
+      card.__x = Math.max(0, Math.min(x, dw - cw));
+      card.__y = Math.max(0, y);
+      card.__r = parseFloat(card.dataset.r) || 0;
+      card.__tx = 0; card.__ty = 0;
+      paint(card);
+      card.style.zIndex = ++zTop;
+    }
+    function clear(card) {
+      card.style.transform = ""; card.style.zIndex = "";
+    }
+    function layout() {
+      if (enabled()) { cards.forEach(place); }
+      else { cards.forEach(clear); }
+    }
+
+    cards.forEach(function (card) {
+      card.style.transition = "box-shadow .2s ease";
+      if (tiltable) {
+        card.addEventListener("mousemove", function (e) {
+          if (card.__drag || !enabled()) return;
+          var b = card.getBoundingClientRect();
+          card.__tx = ((e.clientX - b.left) / b.width - 0.5) * 12;
+          card.__ty = -((e.clientY - b.top) / b.height - 0.5) * 12;
+          paint(card);
+        });
+        card.addEventListener("mouseleave", function () {
+          if (card.__drag || !enabled()) return;
+          card.__tx = 0; card.__ty = 0; paint(card);
+        });
+      }
+      card.addEventListener("pointerdown", function (e) {
+        if (!enabled()) return;
+        card.__drag = true;
+        card.classList.add("dragging");
+        card.style.zIndex = ++zTop;
+        card.__tx = 0; card.__ty = 0;
+        card.__ox = e.clientX - card.__x;
+        card.__oy = e.clientY - card.__y;
+        card.setPointerCapture(e.pointerId);
+        e.preventDefault();
+      });
+      card.addEventListener("pointermove", function (e) {
+        if (!card.__drag) return;
+        var dw = deck.clientWidth, dh = deck.clientHeight;
+        card.__x = Math.max(-40, Math.min(e.clientX - card.__ox, dw - card.offsetWidth + 40));
+        card.__y = Math.max(-30, Math.min(e.clientY - card.__oy, dh - card.offsetHeight + 60));
+        paint(card);
+      });
+      function drop(e) {
+        if (!card.__drag) return;
+        card.__drag = false;
+        card.classList.remove("dragging");
+        try { card.releasePointerCapture(e.pointerId); } catch (err) {}
+      }
+      card.addEventListener("pointerup", drop);
+      card.addEventListener("pointercancel", drop);
+    });
+
+    layout();
+    // re-run once images load (sizes settle) and on resize
+    window.addEventListener("load", layout);
+    var rt;
+    window.addEventListener("resize", function () {
+      clearTimeout(rt); rt = setTimeout(layout, 150);
+    });
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else { init(); }
 })();
 </script>
 </body>
