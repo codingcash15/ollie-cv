@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Ollie Cashmore — Interactive CV</title>
+<style>
+  :root {
+    --bg: #f2f5f4;
+    --bg-raise: #ffffff;
+    --ink: #122430;
+    --ink-soft: #3f5a68;
+    --muted: #6b8593;
+    --line: #d8e2e1;
+    --accent: #0c96a8;
+    --accent-ink: #075f6b;
+    --accent-soft: rgba(12, 150, 168, 0.1);
+    --term-bg: #0e1c25;
+    --term-ink: #c9dee2;
+    --shadow: 0 1px 2px rgba(18, 36, 48, .05), 0 12px 32px -16px rgba(18, 36, 48, .18);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0b161d;
+      --bg-raise: #101f28;
+      --ink: #e8eef0;
+      --ink-soft: #a9bec7;
+      --muted: #6f8994;
+      --line: #1d3341;
+      --accent: #17b3c5;
+      --accent-ink: #7adfe9;
+      --accent-soft: rgba(23, 179, 197, 0.12);
+      --term-bg: #08121a;
+      --term-ink: #b8d4da;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 16px 40px -20px rgba(0,0,0,.55);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0b161d; --bg-raise: #101f28; --ink: #e8eef0; --ink-soft: #a9bec7;
+    --muted: #6f8994; --line: #1d3341; --accent: #17b3c5; --accent-ink: #7adfe9;
+    --accent-soft: rgba(23,179,197,.12); --term-bg: #08121a; --term-ink: #b8d4da;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 16px 40px -20px rgba(0,0,0,.55);
+  }
+  :root[data-theme="light"] {
+    --bg: #f2f5f4; --bg-raise: #ffffff; --ink: #122430; --ink-soft: #3f5a68;
+    --muted: #6b8593; --line: #d8e2e1; --accent: #0c96a8; --accent-ink: #075f6b;
+    --accent-soft: rgba(12,150,168,.1); --term-bg: #0e1c25; --term-ink: #c9dee2;
+    --shadow: 0 1px 2px rgba(18,36,48,.05), 0 12px 32px -16px rgba(18,36,48,.18);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: "Avenir Next", "Segoe UI", system-ui, -apple-system, sans-serif;
+    font-size: 16px; line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "SF Mono", "Cascadia Code", Consolas, Menlo, monospace; }
+
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- hero ---------- */
+  .hero { padding: 72px 0 40px; }
+  .status {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: "SF Mono", "Cascadia Code", Consolas, Menlo, monospace;
+    font-size: 12px; letter-spacing: .06em; color: var(--accent-ink);
+    background: var(--accent-soft); border: 1px solid var(--line);
+    padding: 6px 12px; border-radius: 999px; margin-bottom: 28px;
+  }
+  .status .dot {
+    width: 7px; height: 7px; border-radius: 50%; background: var(--accent);
+    animation: pulse 2.2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+
+  .hero-grid { display: flex; gap: 36px; align-items: flex-start; }
+  .hero-text { flex: 1; min-width: 0; }
+  h1 {
+    font-size: clamp(40px, 7vw, 64px); line-height: .98; margin: 0 0 18px;
+    font-weight: 800; letter-spacing: -0.02em; text-wrap: balance;
+  }
+  h1 .accent { color: var(--accent); }
+  .thesis {
+    font-size: clamp(17px, 2.4vw, 20px); color: var(--ink-soft);
+    max-width: 34em; margin: 0 0 26px; text-wrap: balance;
+  }
+  .thesis b { color: var(--ink); font-weight: 600; }
+  .headshot {
+    width: clamp(96px, 16vw, 148px); height: clamp(96px, 16vw, 148px);
+    border-radius: 24px; object-fit: cover; flex-shrink: 0;
+    border: 3px solid var(--accent); box-shadow: var(--shadow);
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-size: 13.5px; font-weight: 600; text-decoration: none;
+    color: var(--ink); background: var(--bg-raise);
+    border: 1px solid var(--line); border-radius: 10px;
+    padding: 9px 14px; box-shadow: var(--shadow);
+    transition: transform .15s ease, border-color .15s ease;
+  }
+  .chip:hover { transform: translateY(-2px); border-color: var(--accent); }
+  .chip .k { color: var(--muted); font-weight: 500; }
+
+  .wave-band { margin: 44px 0 0; }
+  #wave { display: block; width: 100%; height: 88px; }
+  .wave-cap {
+    font-family: "SF Mono", "Cascadia Code", Consolas, Menlo, monospace;
+    font-size: 12px; color: var(--muted); margin-top: 6px;
+  }
+  .wave-cap b { color: var(--accent-ink); font-weight: 600; }
+
+  /* ---------- sections ---------- */
+  section { padding: 44px 0; border-top: 1px solid var(--line); }
+  .eyebrow {
+    font-family: "SF Mono", "Cascadia Code", Consolas, Menlo, monospace;
+    font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--accent-ink); margin: 0 0 10px;
+  }
+  h2 {
+    font-size: clamp(24px, 4vw, 32px); font-weight: 800;
+    letter-spacing: -0.015em; margin: 0 0 8px; text-wrap: balance;
+  }
+  .lede { color: var(--ink-soft); max-width: 40em; margin: 0 0 30px; }
+
+  /* timeline */
+  .tl { list-style: none; margin: 0; padding: 0; position: relative; }
+  .tl::before {
+    content: ""; position: absolute; left: 7px; top: 10px; bottom: 10px;
+    width: 2px; background: var(--line);
+  }
+  .tl li { position: relative; padding: 0 0 14px 34px; }
+  .tl .node {
+    position: absolute; left: 0; top: 14px; width: 16px; height: 16px;
+    border-radius: 50%; background: var(--bg); border: 3px solid var(--accent);
+  }
+  .tl details {
+    background: var(--bg-raise); border: 1px solid var(--line);
+    border-radius: 14px; box-shadow: var(--shadow); overflow: hidden;
+  }
+  .tl summary {
+    cursor: pointer; list-style: none; padding: 14px 18px;
+    display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+  }
+  .tl summary::-webkit-details-marker { display: none; }
+  .tl summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+  .tl .when {
+    font-family: "SF Mono", "Cascadia Code", Consolas, Menlo, monospace;
+    font-size: 12.5px; color: var(--accent-ink); white-space: nowrap;
+  }
+  .tl .what { font-weight: 700; font-size: 16.5px; flex: 1; min-width: 200px; }
+  .tl .twist {
+    margin-left: auto; font-size: 12px; color: var(--muted);
+    transition: transform .2s ease;
+  }
+  .tl details[open] .twist { transform: rotate(180deg); }
+  .tl .body { padding: 0 18px 16px; color: var(--ink-soft); font-size: 15px; max-width: 60em; }
+  .tl .body p { margin: 0 0 8px; }
+  .tl .body p:last-child { margin: 0; }
+
+  /* pillars */
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+  .card {
+    background: var(--bg-raise); border: 1px solid var(--line);
+    border-radius: 16px; padding: 22px; box-shadow: var(--shadow);
+  }
+  .card h3 { margin: 0 0 10px; font-size: 17px; font-weight: 700; }
+  .card h3 .tag {
+    display: block; font-family: "SF Mono", "Cascadia Code", Consolas, Menlo, monospace;
+    font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--accent-ink); margin-bottom: 6px; font-weight: 500;
+  }
+  .card p, .card li { color: var(--ink-soft); font-size: 14.5px; margin: 0; }
+  .card ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
+
+  /* terminal */
+  .term {
+    background: var(--term-bg); border-radius: 16px; padding: 18px 20px;
+    font-family: "SF Mono", "Cascadia Code", Consolas, Menlo, monospace;
+    font-size: 13px; line-height: 1.7; color: var(--term-ink);
+    box-shadow: var(--shadow); overflow-x: auto; margin-top: 20px;
+  }
+  .term .bar { display: flex; gap: 6px; margin-bottom: 12px; }
+  .term .bar span { width: 10px; height: 10px; border-radius: 50%; background: #2c4654; }
+  .term .p { color: #57d4e0; }
+  .term .ok { color: #7fd8a4; }
+  .term .c { color: #5d7d8c; }
+  .term div { white-space: pre; }
+
+  /* deloitte */
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 640px) { .split { grid-template-columns: 1fr; } }
+  .fact {
+    background: var(--bg-raise); border: 1px solid var(--line);
+    border-radius: 16px; padding: 22px; box-shadow: var(--shadow);
+  }
+  .fact .big { font-size: 17px; font-weight: 700; margin: 0 0 8px; text-wrap: balance; }
+  .fact p { color: var(--ink-soft); font-size: 14.5px; margin: 0; }
+
+  /* education strip */
+  .edu-row { display: flex; flex-wrap: wrap; gap: 10px 28px; color: var(--ink-soft); font-size: 15px; }
+  .edu-row b { color: var(--ink); }
+  .edu-note { color: var(--muted); font-size: 13.5px; margin-top: 14px; }
+
+  /* footer */
+  footer { border-top: 1px solid var(--line); padding: 40px 0 64px; }
+  .foot-line {
+    font-family: "SF Mono", "Cascadia Code", Consolas, Menlo, monospace;
+    font-size: 13px; color: var(--muted);
+  }
+  .foot-line b { color: var(--accent-ink); font-weight: 600; }
+  .foot-cta { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 10px; }
+
+  /* reveal */
+  .rv { opacity: 0; transform: translateY(14px); transition: opacity .5s ease, transform .5s ease; }
+  .rv.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .rv { opacity: 1; transform: none; transition: none; }
+    .status .dot { animation: none; }
+    html { scroll-behavior: auto; }
+  }
+  @media (max-width: 560px) {
+    .hero-grid { flex-direction: column-reverse; }
+    .tl .twist { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero wrap">
+  <div class="status"><span class="dot"></span>OPEN TO AI ROLES · AUCKLAND, NZ</div>
+  <div class="hero-grid">
+    <div class="hero-text">
+      <h1>Ollie <span class="accent">Cashmore</span></h1>
+      <p class="thesis">
+        <b>Auditor at Deloitte. Co-founder of WeTalk.ai.</b> I took an AI voice agent from
+        concept to answering real patient calls in production, in under eight months,
+        while working full time in audit.
+      </p>
+      <div class="chips">
+        <a class="chip" href="mailto:ollie@wetalkai.co.nz"><span class="k">email</span>ollie@wetalkai.co.nz</a>
+        <a class="chip" href="https://www.linkedin.com/in/ollie-cashmore-2b2829339/" target="_blank" rel="noopener"><span class="k">linkedin</span>ollie-cashmore</a>
+        <span class="chip"><span class="k">phone</span>027 466 7637</span>
+      </div>
+    </div>
+    <img class="headshot" src="photo.jpg" alt="Ollie Cashmore">
+  </div>
+  <div class="wave-band">
+    <canvas id="wave" aria-hidden="true"></canvas>
+    <p class="wave-cap"><b>Jenny</b> · the AI phone receptionist we built · answering clinic calls 24/7 <span class="c">(move your cursor across the waveform)</span></p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow rv">01 · The story</p>
+    <h2 class="rv">Launch. Learn. Rebuild.</h2>
+    <p class="lede rv">WeTalk.ai is a registered NZ company I co-founded with Hamish Faulks. We build AI voice
+      agents for physio and allied health clinics. This is how it has gone so far, expand each step.</p>
+    <ul class="tl">
+      <li class="rv"><span class="node"></span>
+        <details>
+          <summary><span class="when">NOV 2025</span><span class="what">Founded WeTalk.ai</span><span class="twist">▼</span></summary>
+          <div class="body">
+            <p>Started with a simple observation: clinics miss calls, and missed calls are missed patients.
+              We designed "Jenny", an AI receptionist that answers inbound patient calls 24/7, books
+              appointments in real time through practice management APIs (Gensolve), and confirms by SMS.</p>
+            <p>Stack: Vapi, ElevenLabs, Claude and Twilio. My side of the company: strategy, operations,
+              product roadmap and agent design. Hamish runs sales and client relationships.</p>
+          </div>
+        </details>
+      </li>
+      <li class="rv"><span class="node"></span>
+        <details>
+          <summary><span class="when">APR 2026</span><span class="what">First clinic live, real patient calls</span><span class="twist">▼</span></summary>
+          <div class="body">
+            <p>Jenny went live with our first client, a clinic within a 10-clinic national network,
+              answering the clinic's real inbound patient calls. Concept to production deployment in
+              under eight months, alongside a full-time audit job.</p>
+          </div>
+        </details>
+      </li>
+      <li class="rv"><span class="node"></span>
+        <details>
+          <summary><span class="when">MAY–JUL 2026</span><span class="what">Rebuilt the agent on live call data</span><span class="twist">▼</span></summary>
+          <div class="body">
+            <p>Production teaches you what no demo can. We fed real calls, real booking scenarios and real
+              failure modes back into the build and redesigned Jenny into a production-grade system:
+              guardrails with human escalation for medical questions and private information, and
+              per-clinic configuration of services, practitioners and booking rules.</p>
+          </div>
+        </details>
+      </li>
+      <li class="rv"><span class="node"></span>
+        <details>
+          <summary><span class="when">JUL 2026</span><span class="what">Second client, growing pipeline</span><span class="twist">▼</span></summary>
+          <div class="body">
+            <p>Second client secured on the rebuilt platform, deployment built and tested, signing
+              20 July 2026. Active pipeline of further clinics, including the opportunity to expand
+              across our first client's 10-clinic network.</p>
+          </div>
+        </details>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow rv">02 · What I actually do</p>
+    <h2 class="rv">Build it, run it, price it</h2>
+    <p class="lede rv">Co-founding at launch stage means owning the whole loop, from agent behaviour to unit economics.</p>
+    <div class="cards">
+      <div class="card rv">
+        <h3><span class="tag">Build</span>Agent design &amp; guardrails</h3>
+        <ul>
+          <li>Designed Jenny's behaviour, escalation rules and per-clinic configuration</li>
+          <li>Human handoff for medical questions and private information, responsible AI from day one</li>
+          <li>Co-managed a contract software engineer on core delivery</li>
+        </ul>
+      </div>
+      <div class="card rv">
+        <h3><span class="tag">Operate</span>AI operations, built with Claude Code</h3>
+        <ul>
+          <li>MCP and API integrations into Xero, Gmail and Google Calendar</li>
+          <li>Nightly automated business intelligence, version-controlled in git</li>
+          <li>Automated contractor invoicing pipeline into Xero</li>
+        </ul>
+      </div>
+      <div class="card rv">
+        <h3><span class="tag">Commercial</span>Unit economics &amp; clients</h3>
+        <ul>
+          <li>Per-minute AI cost analysis from usage actuals, burn and break-even modelling, margin-floor pricing</li>
+          <li>Scoped requirements with clinic owners and reception staff</li>
+          <li>Ran demos, co-managed pilots and commercial negotiations</li>
+        </ul>
+      </div>
+    </div>
+    <div class="term rv" role="img" aria-label="Terminal showing the WeTalk operations workflow">
+      <div class="bar"><span></span><span></span><span></span></div>
+      <div><span class="p">wetalk-ops $</span> claude <span class="c"># how the company actually runs</span></div>
+      <div><span class="ok">✓</span> nightly business intelligence compiled → committed to git</div>
+      <div><span class="ok">✓</span> contractor invoices generated → pushed to Xero</div>
+      <div><span class="ok">✓</span> calendar + inbox synced via MCP</div>
+      <div><span class="c"># this page was also built with Claude Code</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow rv">03 · The day job</p>
+    <h2 class="rv">Deloitte, Audit</h2>
+    <p class="lede rv">Junior Associate in Deloitte Auckland's audit practice since January 2026, where the
+      AI and audit worlds are starting to meet.</p>
+    <div class="split">
+      <div class="fact rv">
+        <p class="big">Only graduate in Deloitte's Auckland audit practice selected to test a new AI model for Deloitte Audit</p>
+        <p>Providing structured feedback on a model in development, from the perspective of someone who
+          ships AI systems outside work hours.</p>
+      </div>
+      <div class="fact rv">
+        <p class="big">Audit AI Champions team</p>
+        <p>Supporting AI adoption across the practice, alongside core audit delivery: substantive testing,
+          process walkthroughs and day-to-day client liaison. Audit Intern at RSM before this (2024–25).</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow rv">04 · Foundations</p>
+    <h2 class="rv">Education &amp; background</h2>
+    <div class="edu-row rv" style="margin-top:18px">
+      <span><b>BCom, Finance &amp; Economics</b> (double major) · University of Otago, 2023–2025</span>
+      <span>Academic Excellence Award, ECON 302</span>
+      <span>Māori Entrance Scholarship</span>
+    </div>
+    <div class="edu-row rv" style="margin-top:10px">
+      <span><b>Otago Boys' High School</b> · House Leader · Māori Sportsman of the Year 2022</span>
+      <span>Otago rep basketball, 6 years</span>
+    </div>
+    <p class="edu-note rv">Earlier: basketball coach, hospitality, retail sales. Five years of customer-facing
+      work alongside school and university.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p class="foot-line rv"><b>$</b> built by Ollie with Claude Code · the same way WeTalk runs</p>
+    <div class="foot-cta rv">
+      <a class="chip" href="mailto:ollie@wetalkai.co.nz">Get in touch</a>
+      <a class="chip" href="https://www.linkedin.com/in/ollie-cashmore-2b2829339/" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* scroll reveal */
+  var els = document.querySelectorAll(".rv");
+  if (reduced || !("IntersectionObserver" in window)) {
+    els.forEach(function (e) { e.classList.add("in"); });
+  } else {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.12 });
+    els.forEach(function (e) { io.observe(e); });
+  }
+
+  /* waveform */
+  var cv = document.getElementById("wave");
+  var ctx = cv.getContext("2d");
+  var mouseX = -1, t = 0;
+  var accent = function () {
+    return getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || "#0c96a8";
+  };
+  function size() {
+    var r = cv.getBoundingClientRect();
+    cv.width = r.width * devicePixelRatio;
+    cv.height = 88 * devicePixelRatio;
+    ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+  }
+  size();
+  window.addEventListener("resize", size);
+  cv.addEventListener("mousemove", function (e) {
+    mouseX = e.clientX - cv.getBoundingClientRect().left;
+  });
+  cv.addEventListener("mouseleave", function () { mouseX = -1; });
+
+  function draw() {
+    var w = cv.getBoundingClientRect().width, h = 88;
+    ctx.clearRect(0, 0, w, h);
+    var n = Math.max(40, Math.floor(w / 11));
+    var gap = w / n;
+    ctx.fillStyle = accent();
+    for (var i = 0; i < n; i++) {
+      var x = i * gap + gap / 2;
+      var base = 6
+        + 14 * Math.abs(Math.sin(i * 0.55 + t * 0.045))
+        + 10 * Math.abs(Math.sin(i * 0.21 - t * 0.03));
+      if (mouseX >= 0) {
+        var d = Math.abs(x - mouseX);
+        base += Math.max(0, 30 - d / 4) * (0.7 + 0.3 * Math.sin(t * 0.25 + i));
+      }
+      var bh = Math.min(h - 8, base);
+      ctx.globalAlpha = 0.35 + 0.65 * (bh / (h - 8));
+      ctx.beginPath();
+      if (ctx.roundRect) { ctx.roundRect(x - 1.8, h / 2 - bh / 2, 3.6, bh, 2); }
+      else { ctx.rect(x - 1.8, h / 2 - bh / 2, 3.6, bh); }
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    t++;
+    if (!reduced) requestAnimationFrame(draw);
+  }
+  draw();
+  if (reduced) { t = 30; draw(); }
+})();
+</script>
+</body>
+</html>
